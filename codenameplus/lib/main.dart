@@ -124,7 +124,87 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           
-          children: <Widget>[Icon(Icons.square,size: 100.0,color:turn==1?Colors.blue:Colors.red)]+card.asMap().entries.map((entry)=>Row(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:[
+                Icon(Icons.square,size: 100.0,color:turn==1?Colors.blue:Colors.red),
+                GestureDetector(
+                  child:Icon(Icons.repeat),
+                  onTap: (){
+                    var rimn_turn=0;
+                    for(var ii=0;ii<4;ii++){
+                      for(var jj=0;jj<5;jj++){
+                        if(card[ii][jj]==turn && state[ii][jj]==0){
+                            rimn_turn++;
+                        }
+                      }
+                    }
+                    var rimn_unturn=0;
+                    for(var ii=0;ii<4;ii++){
+                      for(var jj=0;jj<5;jj++){
+                        if(card[ii][jj]==3-turn && state[ii][jj]==0){
+                            rimn_unturn++;
+                        }
+                      }
+                    }
+                    var rimn_blank=0;
+                    for(var ii=0;ii<4;ii++){
+                      for(var jj=0;jj<5;jj++){
+                        if(card[ii][jj]==0 && state[ii][jj]==0){
+                            rimn_blank++;
+                        }
+                      }
+                    }
+                    print(rimn_turn);
+                    print(rimn_unturn);
+                    print(rimn_blank);
+                    List<int> newlist = [for (var k = 0; k <= 19; k++) k];
+                    for(var ii=0;ii<4;ii++){
+                      for(var jj=0;jj<5;jj++){
+                        if (state[ii][jj]==1){
+                          newlist.remove(5*ii+jj);
+                        }
+                      }
+                    }  
+                    List<int> shn=newlist..shuffle();
+                    var t=0;
+                    while(t!=rimn_turn) {
+                      int x=shn.removeAt(0);
+                      card[(x/5).floor()][x%5]=turn;
+                      t++;
+                    }
+                    t=0;
+                    while(t!=rimn_unturn) {
+                      int x=shn.removeAt(0);
+                      card[(x/5).floor()][x%5]=3-turn;
+                      t++;
+                    }
+                    t=0;
+                    while(t!=rimn_blank) {
+                      int x=shn.removeAt(0);
+                      card[(x/5).floor()][x%5]=0;
+                      t++;
+                    }
+                    int x=shn.removeAt(0);
+                    card[(x/5).floor()][x%5]=-1;
+
+                    print(newlist);
+                    
+
+                    // var remain_is_turn=
+                   turn=3-turn;
+                   
+                    setState(() {
+                    
+                  });
+  
+                  }
+                )
+                
+                
+                ]),]
+          +card.asMap().entries.map((entry)=>Row(
 
             mainAxisAlignment: MainAxisAlignment.center,
             
