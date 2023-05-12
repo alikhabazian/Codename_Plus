@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Code name plus'),
     );
   }
 }
@@ -48,9 +48,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool block=false ;
   int _counter = 0;
   int first=1;
   int turn=Random().nextInt(2)+1;//blue
+  List<int> tile=[0,0];
+  List<int> round=[0,0];
+  List<int> end_tile=[0,0];
   // -1 bomb 0 nothing 1 blu 2 red
   //2 -1    1-2    2-1   2 -0
   // 8 ,7 ,1 ,4
@@ -66,7 +70,16 @@ class _MyHomePageState extends State<MyHomePage> {
     first=1;
     state=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
     card=[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]];
+    tile=[0,0];
+    if(turn==1){//blue at start
+     end_tile=[8,7];
+    }
+    else{
+      end_tile=[7,8];
+    }
+
     print("initState Called");
+    block=false ;
     setState(() { });
   }
 
@@ -111,27 +124,103 @@ class _MyHomePageState extends State<MyHomePage> {
       }
      double width = MediaQuery.of(context).size.width;
      double height = MediaQuery.of(context).size.height;
+     print([width,height]);
      double min_size=min(width,height)*0.9;
+     print(min_size);
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+      child:Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           
           children: <Widget>[
+            
+
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children:[
-                Icon(Icons.square,size: 100.0,color:turn==1?Colors.blue:Colors.red),
-                GestureDetector(
-                  child:Icon(Icons.repeat),
+                Text('Tiles:',
+            style: TextStyle(
+              fontSize: 40,
+              foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 2
+                ..color = Colors.blue[700]!,
+            ),
+            ),
+                Container(
+                  color: Colors.blue,
+                  // r
+                  margin: EdgeInsets.all(min_size/100),
+                  width: min_size/5,
+                  height: min_size/5,
+              child:Center(child:Text('${tile[0]}'))
+              ),
+               Container(
+                  color: Colors.red,
+                  // r
+                  margin: EdgeInsets.all(min_size/100),
+                  width: min_size/5,
+                  height: min_size/5,
+              child:Center(child:Text('${tile[1]}'))
+              ),
+              ]
+            ),
+
+
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:[
+                Text('Scors:',
+            style: TextStyle(
+              fontSize: 34,
+              foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 2
+                ..color = Colors.blue[700]!,
+            ),
+            ),
+                Container(
+                  color: Colors.blue,
+                  // r
+                  margin: EdgeInsets.all(min_size/100),
+                  width: min_size/5,
+                  height: min_size/5,
+              child:Center(child:Text('${round[0]}'))
+              ),
+               Container(
+                  color: Colors.red,
+                  // r
+                  margin: EdgeInsets.all(min_size/100),
+                  width: min_size/5,
+                  height: min_size/5,
+              child:Center(child:Text('${round[1]}'))
+              ),
+              ]
+            ),
+
+
+
+
+           GestureDetector(
+                  child:Container(
+                  color:turn==1?Colors.blue:Colors.red,
+                  // r
+                  // margin: EdgeInsets.all(min_size/100),
+                  width: min_size/5,
+                  height: min_size/5,
+                  child:Icon(Icons.repeat)),
                   onTap: (){
+                    if(!block){
                     var rimn_turn=0;
                     for(var ii=0;ii<4;ii++){
                       for(var jj=0;jj<5;jj++){
@@ -197,14 +286,91 @@ class _MyHomePageState extends State<MyHomePage> {
                    
                     setState(() {
                     
-                  });
-  
+                    }
+                    
+                    );
+                    }
                   }
-                )
+                ),
+              
+                // Icon(Icons.square,size: 100.0,color:turn==1?Colors.blue:Colors.red),
+                // GestureDetector(
+                //   child:Icon(Icons.repeat),
+                //   onTap: (){
+                //     var rimn_turn=0;
+                //     for(var ii=0;ii<4;ii++){
+                //       for(var jj=0;jj<5;jj++){
+                //         if(card[ii][jj]==turn && state[ii][jj]==0){
+                //             rimn_turn++;
+                //         }
+                //       }
+                //     }
+                //     var rimn_unturn=0;
+                //     for(var ii=0;ii<4;ii++){
+                //       for(var jj=0;jj<5;jj++){
+                //         if(card[ii][jj]==3-turn && state[ii][jj]==0){
+                //             rimn_unturn++;
+                //         }
+                //       }
+                //     }
+                //     var rimn_blank=0;
+                //     for(var ii=0;ii<4;ii++){
+                //       for(var jj=0;jj<5;jj++){
+                //         if(card[ii][jj]==0 && state[ii][jj]==0){
+                //             rimn_blank++;
+                //         }
+                //       }
+                //     }
+                //     print(rimn_turn);
+                //     print(rimn_unturn);
+                //     print(rimn_blank);
+                //     List<int> newlist = [for (var k = 0; k <= 19; k++) k];
+                //     for(var ii=0;ii<4;ii++){
+                //       for(var jj=0;jj<5;jj++){
+                //         if (state[ii][jj]==1){
+                //           newlist.remove(5*ii+jj);
+                //         }
+                //       }
+                //     }  
+                //     List<int> shn=newlist..shuffle();
+                //     var t=0;
+                //     while(t!=rimn_turn) {
+                //       int x=shn.removeAt(0);
+                //       card[(x/5).floor()][x%5]=turn;
+                //       t++;
+                //     }
+                //     t=0;
+                //     while(t!=rimn_unturn) {
+                //       int x=shn.removeAt(0);
+                //       card[(x/5).floor()][x%5]=3-turn;
+                //       t++;
+                //     }
+                //     t=0;
+                //     while(t!=rimn_blank) {
+                //       int x=shn.removeAt(0);
+                //       card[(x/5).floor()][x%5]=0;
+                //       t++;
+                //     }
+                //     int x=shn.removeAt(0);
+                //     card[(x/5).floor()][x%5]=-1;
+
+                //     print(newlist);
+                    
+
+                //     // var remain_is_turn=
+                //    turn=3-turn;
+                   
+                //     setState(() {
+                    
+                //   });
+  
+                //   }
+                // )
                 
                 
-                ]),]
-          +card.asMap().entries.map((entry)=>Row(
+                
+                ]
+            +card.asMap().entries.map((entry)=>Row(
 
             mainAxisAlignment: MainAxisAlignment.center,
             
@@ -213,11 +379,14 @@ class _MyHomePageState extends State<MyHomePage> {
             card[entry.key].asMap().entries.map((entryj)=>
             GestureDetector(
             onTap: (){
-                if (state[entry.key][entryj.key]==0){
+                if (state[entry.key][entryj.key]==0 && !block){
                 setState(() {
                   state[entry.key][entryj.key]=1;
                   if (card[entry.key][entryj.key]==-1){
                     print('bomb');
+                    print('win this game');
+                      block=true;
+                      round[2-turn]=round[2-turn]+1;
                   }
                   else if (turn!=card[entry.key][entryj.key]){
                     var rimn_turn=0;
@@ -281,8 +450,27 @@ class _MyHomePageState extends State<MyHomePage> {
                     
 
                     // var remain_is_turn=
+                   if(card[entry.key][entryj.key]==3-turn){
+                    tile[2-turn]=tile[2-turn]+1;
+                    if(end_tile[2-turn]==tile[2-turn]){
+                      print('win this game');
+                      block=true;
+                      round[2-turn]=round[2-turn]+1;
+                      
+                    }
+                   }
                    turn=3-turn;
                    
+                   
+                  }
+                  else{
+                    tile[turn-1]=tile[turn-1]+1;
+                    if(end_tile[turn-1]==tile[turn-1]){
+                      print('win this game');
+                      block=true;
+                      round[turn-1]=round[turn-1]+1;
+                      
+                    }
                   }
                     
                   });
@@ -303,6 +491,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ).toList()
           )).toList(),
         ),
+      )
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
